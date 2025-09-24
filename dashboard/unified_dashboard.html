@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Cyclistic Analytics Dashboard</title>
+    <meta name="description" content="Comprehensive unified dashboard for Cyclistic bike-share analysis, combining all visualizations, reports, and insights.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; }
+        .nav-tabs .nav-link { border: none; }
+        .section { padding: 20px 0; }
+        .viz-container { height: 500px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">🚲 Unified Cyclistic Dashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#overview">Overview</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#insights">Insights</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#visualizations">Visualizations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#reports">Reports</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#documentation">Docs</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <ul class="nav nav-tabs" id="mainTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">Overview</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="insights-tab" data-bs-toggle="tab" data-bs-target="#insights" type="button" role="tab">Key Insights</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="visualizations-tab" data-bs-toggle="tab" data-bs-target="#visualizations" type="button" role="tab">Visualizations</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab">Reports</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="documentation-tab" data-bs-toggle="tab" data-bs-target="#documentation" type="button" role="tab">Documentation</button>
+                    </li>
+                </ul>
+                <div class="tab-content mt-4" id="mainTabContent">
+                    <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                        <h2>What This Project Is About</h2>
+                        <div class="card mb-4" style="background: linear-gradient(135deg, rgba(30,64,175,0.1), rgba(6,182,212,0.1)); border: 2px solid #1e40af;">
+                            <div class="card-body">
+                                <h3 style="color: #1e40af;">Imagine This: A Bike Company with a $2.8 Million Question</h3>
+                                <p>Picture Chicago in the summer - thousands of people zipping around on blue bikes, enjoying the city from a whole new angle. But behind the scenes, Cyclistic's leaders are asking: <strong>"How can we turn our casual riders into loyal members?"</strong></p>
+                                <p>This isn't just about bikes. It's about understanding people - what makes them grab a bike for a quick work commute versus a leisurely afternoon adventure. By studying 3.2 million bike rides over 16 months, we uncovered patterns that could transform Cyclistic's business forever.</p>
+                                <div class="alert alert-success">
+                                    <strong>💡 The Big Discovery:</strong> Members and casual riders don't just use bikes differently - they live different lifestyles. Understanding this difference is the key to unlocking millions in new revenue.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5>3.2M+</h5>
+                                        <p>Bike rides analyzed</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5>16</h5>
+                                        <p>Months of data</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5>$2.8M</h5>
+                                        <p>Potential revenue</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5>460%</h5>
+                                        <p>ROI</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Add more from the original -->
+                    </div>
+                    <div class="tab-pane fade" id="insights" role="tabpanel">
+                        <h2>Key Findings Dashboard</h2>
+                        <p>Essential insights answering: <strong>"How do annual members and casual riders use Cyclistic bikes differently?"</strong></p>
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body" style="background: linear-gradient(135deg, rgba(6,182,212,0.1), rgba(30,64,175,0.1));">
+                                        <h5>Total Rides</h5>
+                                        <h1>2.9M</h1>
+                                        <p>83% from members, 17% from casuals</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body" style="background: linear-gradient(135deg, rgba(34,197,238,0.1), rgba(6,182,212,0.1));">
+                                        <h5>Revenue Impact</h5>
+                                        <h1>$2.8M</h1>
+                                        <p>Potential annual revenue from converting 10% of casuals</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body" style="background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(5,150,105,0.1));">
+                                        <h5>Usage Difference</h5>
+                                        <h1>3x</h1>
+                                        <p>Members ride 3x more frequently than casuals</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body" style="background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(217,119,6,0.1));">
+                                        <h5>Ride Duration</h5>
+                                        <h1>2x</h1>
+                                        <p>Casuals take rides twice as long as members</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Add more insights -->
+                    </div>
+                    <div class="tab-pane fade" id="visualizations" role="tabpanel">
+                        <h2>Interactive Visualizations</h2>
+                        <div class="accordion" id="vizAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#viz1">
+                                        3D Duration Scatter
+                                    </button>
+                                </h2>
+                                <div id="viz1" class="accordion-collapse collapse show" data-bs-parent="#vizAccordion">
+                                    <div class="accordion-body">
+                                        <iframe src="../outputs/3d_duration_scatter.html" width="100%" height="500" frameborder="0"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#viz2">
+                                        3D Multi Panel Dashboard
+                                    </button>
+                                </h2>
+                                <div id="viz2" class="accordion-collapse collapse" data-bs-parent="#vizAccordion">
+                                    <div class="accordion-body">
+                                        <iframe src="../outputs/3d_multi_panel_dashboard.html" width="100%" height="500" frameborder="0"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Add more viz iframes -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#viz3">
+                                        Chord Diagram
+                                    </button>
+                                </h2>
+                                <div id="viz3" class="accordion-collapse collapse" data-bs-parent="#vizAccordion">
+                                    <div class="accordion-body">
+                                        <iframe src="../outputs/chord_diagram.html" width="100%" height="500" frameborder="0"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Add all others similarly -->
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="reports" role="tabpanel">
+                        <h2>Analysis Reports</h2>
+                        <div class="container">
+                            <h1>Cyclistic Case Study</h1>
+                            <div class="mb-4">
+                                <strong>Author:</strong> Daniel Abate Garay<br>
+                                <strong>Role:</strong> Technical Solutions Architect & Data Scientist<br>
+                                <strong>Project Type:</strong> Exploratory Data Analysis + Strategic Recommendations<br>
+                                <strong>Tools Used:</strong> Python, R, Pandas, ggplot2, Seaborn, Markdown
+                            </div>
+                            <div class="mb-4">
+                                <h2>Objective</h2>
+                                <p>Analyze Cyclistic's bike-share trip data to uncover behavioral differences between casual riders and annual members, and recommend strategies to increase membership conversion.</p>
+                            </div>
+                            <div class="mb-4">
+                                <h2>Analysis Summary</h2>
+                                <ul>
+                                    <li><strong>Members</strong> take shorter rides (mean ~12 min) primarily on weekdays, indicating commuting behavior.</li>
+                                    <li><strong>Casuals</strong> take longer rides (mean ~40-44 min) more on weekends, suggesting leisure use.</li>
+                                    <li>Statistical tests confirm significant differences in ride lengths between user types.</li>
+                                </ul>
+                            </div>
+                            <div class="mb-4">
+                                <h2>Recommendations</h2>
+                                <ol>
+                                    <li><strong>Targeted Weekend Promotions for Casuals:</strong> Focus on tourist stations with weekend-only membership trials.</li>
+                                    <li><strong>Weekday Member Retention:</strong> Enhance commuter benefits.</li>
+                                    <li><strong>Digital Engagement Campaigns:</strong> Use app notifications.</li>
+                                    <li><strong>Infrastructure Expansion:</strong> Add bike stations near tourist areas.</li>
+                                </ol>
+                            </div>
+                            <!-- Add more sections -->
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="documentation" role="tabpanel">
+                        <h2>Documentation</h2>
+                        <div class="container">
+                            <h1>Advanced Bike-Share Analytics Platform</h1>
+                            <p>Transforming Chicago's bike-share data into actionable business insights. Analysis of 3.2M+ rides reveals $2.8M revenue opportunity through strategic casual-to-member conversion.</p>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-body text-center">
+                                            <h5>3.2M+</h5>
+                                            <p>Rides analyzed</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Add more -->
+                            </div>
+                            <!-- Add more content -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Load visualizations
+        // For example, load 3d scatter data
+        fetch('data/processed/sample_data.json') // Assuming data file
+        .then(response => response.json())
+        .then(data => {
+            // Plotly code here
+        });
+    </script>
+</body>
+</html>
