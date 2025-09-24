@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyclistic Case Study Report</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; background: #f8f9fa; color: #222; }
+        .navbar { background: #1a4d8f; color: #fff; padding: 16px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: sticky; top: 0; z-index: 100; }
+        .navbar .nav-container { max-width: 900px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; }
+        .navbar h1 { color: #fff; font-size: 1.6em; margin: 0; letter-spacing: 1px; }
+        .navbar nav a { color: #fff; text-decoration: none; margin-left: 18px; font-weight: 500; transition: color 0.2s; font-size: 1em; white-space: nowrap; }
+        .navbar nav a:hover { color: #ffd700; }
+        .navbar nav a.active { background: #ffd700; color: #1a4d8f; font-weight: bold; box-shadow: 0 2px 8px #ffd70055; border-radius: 6px; padding: 6px 16px; }
+        .container { max-width: 800px; margin: 40px auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); padding: 40px 32px; }
+        h1, h2, h3 { color: #1a73e8; margin-top: 1.5em; }
+        h1 { font-size: 2.5em; margin-bottom: 0.2em; }
+        h2 { font-size: 1.5em; margin-bottom: 0.5em; }
+        h3 { font-size: 1.1em; margin-bottom: 0.3em; }
+        ul, ol { margin-left: 1.5em; }
+        .author { color: #555; font-size: 1.1em; margin-bottom: 1.5em; }
+        .section { margin-bottom: 2em; }
+        .recommendations li { margin-bottom: 0.7em; }
+        .footer { color: #888; font-size: 0.95em; margin-top: 2em; text-align: center; }
+        @media (max-width: 600px) { .container { padding: 18px 6px; } .navbar .nav-container { padding: 0 8px; } }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-container">
+            <h1>Cyclistic Case Study</h1>
+            <nav>
+                <a href="cyclistic_web_report.html">Interactive Report</a>
+                <a href="cyclistic_best_report.html" class="active">Summary Report</a>
+            </nav>
+        </div>
+    </div>
+    <div class="container">
+        <h1>Cyclistic Case Study</h1>
+        <div class="author">
+            <strong>Author:</strong> Daniel Abate Garay<br>
+            <strong>Role:</strong> Technical Solutions Architect & Data Scientist<br>
+            <strong>Project Type:</strong> Exploratory Data Analysis + Strategic Recommendations<br>
+            <strong>Tools Used:</strong> Python, R, Pandas, ggplot2, Seaborn, Markdown
+        </div>
+        <div class="section">
+            <h2>Objective</h2>
+            <p>Analyze Cyclistic's bike-share trip data to uncover behavioral differences between casual riders and annual members, and recommend strategies to increase membership conversion.</p>
+        </div>
+        <div class="section">
+            <h2>Project Structure</h2>
+            <ul>
+                <li><strong>data/</strong>: Raw trip data files</li>
+                <li><strong>scripts/</strong>: Python and R analysis scripts</li>
+                <li><strong>outputs/</strong>: Cleaned data, charts, and summary tables</li>
+                <li><strong>visuals/</strong>: Branded diagrams and project maps</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Key Outputs</h2>
+            <ul>
+                <li>Ride length distribution by user type (2019-2020)</li>
+                <li>Ride counts by day of week (1=Sunday)</li>
+                <li>Top stations for casual vs. member riders</li>
+                <li>Strategic recommendations for membership growth</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Data Sources</h2>
+            <ul>
+                <li>Divvy_Trips_2019_Q1.csv: 365,069 rows of Q1 2019 trip data</li>
+                <li>Divvy_Trips_2020_Q1.csv: 426,887 rows of Q1 2020 trip data</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Analysis Summary</h2>
+            <ul>
+                <li><strong>Members</strong> take shorter rides (mean ~12 min) primarily on weekdays (mode day 3-5), indicating commuting behavior.</li>
+                <li><strong>Casuals</strong> take longer rides (mean ~40-44 min) more on weekends (mode day 1 or 7), suggesting leisure use.</li>
+                <li>Statistical tests confirm significant differences (p-value &lt; 0.0001) in ride lengths between user types for both years.</li>
+                <li>Ride counts increased from 2019 to 2020, with members dominating volume.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Visualizations</h2>
+            <ul>
+                <li>Ride counts by day of week and user type</li>
+                <li>Ride length distributions</li>
+                <li>Average ride length by day</li>
+                <li>Ride counts by year</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Recommendations</h2>
+            <ol class="recommendations">
+                <li><strong>Targeted Weekend Promotions for Casuals:</strong> Focus on tourist stations (Streeter Dr &amp; Grand Ave, Lake Shore Dr &amp; Monroe St, Shedd Aquarium) with weekend-only membership trials. Offer 2-week free trials during peak summer months to convert leisure riders.</li>
+                <li><strong>Weekday Member Retention:</strong> Enhance commuter benefits with priority docking at business districts, loyalty rewards for frequent weekday users, and discounted annual renewals for consistent riders.</li>
+                <li><strong>Digital Engagement Campaigns:</strong> Use app notifications to target casuals based on usage patterns - weekend reminders for membership benefits, personalized offers for frequent riders near tourist areas.</li>
+                <li><strong>Infrastructure Expansion:</strong> Add bike stations near tourist attractions and lakefront areas to capture casual growth. Increase weekday capacity in downtown business districts.</li>
+                <li><strong>Seasonal Marketing:</strong> Launch summer campaigns targeting casuals with family membership deals, while winter focuses on member retention with indoor cycling partnerships.</li>
+                <li><strong>Data-Driven Monitoring:</strong> Continue tracking post-pandemic trends, with quarterly analysis of user behavior changes and conversion rates.</li>
+            </ol>
+        </div>
+        <div class="section">
+            <h2>Validation and Enhancements</h2>
+            <ul>
+                <li>Added row count assertions to ensure data integrity.</li>
+                <li>Capped ride lengths at 24 hours to handle outliers.</li>
+                <li>Implemented logging for better traceability.</li>
+                <li>Performed t-tests to validate statistical significance of differences.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Portfolio Purpose</h2>
+            <p>This case study serves as a template for future projects, showcasing reproducible workflows, clear documentation, and recruiter-ready visual storytelling.</p>
+        </div>
+        <div class="footer">
+            &copy; 2025 Daniel Abate Garay &mdash; Cyclistic Case Study
+        </div>
+    </div>
+</body>
+</html>
