@@ -418,9 +418,9 @@
         <div style="text-align: center; margin-top: 40px; padding: 25px; background: rgba(255,255,255,0.05); border-radius: 15px;">
             <h3 style="color: var(--neutral-800); margin-bottom: 20px;">🔍 Explore the Data</h3>
             <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 20px;">
-                <button class="btn" onclick="updateDashboardCharts()" onkeydown="handleKeyDown(event, updateDashboardCharts)" aria-label="Update all dashboard charts with latest data">🔄 Update Charts</button>
-                <button class="btn secondary" onclick="exportKeyFindings()" onkeydown="handleKeyDown(event, exportKeyFindings)" aria-label="Export key findings and insights to file">📊 Export Findings</button>
-                <button class="btn" onclick="viewDetailedAnalysis()" onkeydown="handleKeyDown(event, viewDetailedAnalysis)" aria-label="View detailed analysis and statistics">📈 Detailed Analysis</button>
+                <button class="btn" onclick="showLocalSetupMessage('Update Charts')" onkeydown="handleKeyDown(event, () => showLocalSetupMessage('Update Charts'))" aria-label="Update all dashboard charts with latest data">🔄 Update Charts</button>
+                <button class="btn secondary" onclick="showLocalSetupMessage('Export Findings')" onkeydown="handleKeyDown(event, () => showLocalSetupMessage('Export Findings'))" aria-label="Export key findings and insights to file">📊 Export Findings</button>
+                <button class="btn" onclick="showLocalSetupMessage('Detailed Analysis')" onkeydown="handleKeyDown(event, () => showLocalSetupMessage('Detailed Analysis'))" aria-label="View detailed analysis and statistics">📈 Detailed Analysis</button>
                 <button class="btn secondary" onclick="showTutorial()" onkeydown="handleKeyDown(event, showTutorial)" aria-label="Show tutorial and help information">❓ Help & Tutorial</button>
             </div>
             <p style="color: var(--neutral-400); font-size: 0.9em;">
@@ -539,7 +539,7 @@
                 <div class="card">
                     <h3>Interactive Web Report</h3>
                     <p>Professional HTML dashboard with embedded Plotly charts and collapsible sections.</p>
-                    <a href="./report/cyclistic_web_report.html" class="btn" aria-label="View the detailed analysis report">View Report</a>
+                    <a href="./report/" class="btn" aria-label="View the detailed analysis report">View Report</a>
                 </div>
                 <div class="card">
                     <h3>Analysis Scripts</h3>
@@ -2281,11 +2281,11 @@ python src/analysis.py</code></pre>
         }
 
         function exportKeyFindings() {
-            showNotification('Export feature coming soon!', 'info');
+            showLocalSetupMessage('Export Findings');
         }
 
         function viewDetailedAnalysis() {
-            showNotification('Detailed analysis view coming soon!', 'info');
+            showLocalSetupMessage('Detailed Analysis');
         }
 
         function showCodeTab(language) {
@@ -2309,6 +2309,10 @@ python src/analysis.py</code></pre>
                     showNotification('Failed to copy code', 'error');
                 });
             }
+        }
+
+        function showLocalSetupMessage(feature) {
+            showNotification(`🚀 "${feature}" requires local project setup. Clone the repository and run locally for full interactive features!`, 'info');
         }
 
         function showNotification(message, type = 'info') {
