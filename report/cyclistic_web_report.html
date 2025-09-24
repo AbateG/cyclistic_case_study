@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Cyclistic Bike-Share Case Study Report</title>
+	<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+	   <style>
+		   :root {
+			   /* Modern Professional Color Palette */
+			   --primary-dark: #0f172a;
+			   --primary-blue: #1e40af;
+			   --primary-teal: #0f766e;
+			   --accent-cyan: #06b6d4;
+			   --accent-emerald: #059669;
+			   --accent-amber: #d97706;
+			   --accent-rose: #dc2626;
+
+			   /* Neutral Colors */
+			   --neutral-50: #f8fafc;
+			   --neutral-100: #f1f5f9;
+			   --neutral-200: #e2e8f0;
+			   --neutral-300: #cbd5e1;
+			   --neutral-400: #94a3b8;
+			   --neutral-500: #64748b;
+			   --neutral-600: #475569;
+			   --neutral-700: #334155;
+			   --neutral-800: #1e293b;
+			   --neutral-900: #0f172a;
+
+			   /* Background Gradients */
+			   --bg-gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			   --bg-gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+			   --bg-gradient-professional: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+			   --bg-gradient-card: linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.95) 100%);
+
+			   /* Shadows and Effects */
+			   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+			   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+			   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+			   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+			   --shadow-glow: 0 0 20px rgba(30, 64, 175, 0.3);
+
+			   /* Transitions */
+			   --transition-fast: all 0.15s ease;
+			   --transition-normal: all 0.3s ease;
+			   --transition-slow: all 0.5s ease;
+
+			   /* Typography */
+			   --font-primary: 'Segoe UI', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+			   --font-mono: 'Fira Code', 'Monaco', 'Consolas', monospace;
+		   }
+
+		   body {
+			   font-family: var(--font-primary);
+			   margin: 0;
+			   padding: 0;
+			   background: var(--bg-gradient-professional);
+			   color: var(--neutral-700);
+			   line-height: 1.6;
+			   -webkit-font-smoothing: antialiased;
+		   }
+
+		   /* Emoji Rendering Support */
+		   .emoji {
+			   font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', 'Android Emoji', 'EmojiSymbols', 'EmojiOne Mozilla', 'Twemoji Mozilla', 'Segoe UI', sans-serif;
+			   font-variant-emoji: unicode;
+			   text-rendering: optimizeLegibility;
+			   -webkit-font-smoothing: antialiased;
+			   -moz-osx-font-smoothing: grayscale;
+			   font-feature-settings: "liga" off;
+		   }
+
+		   /* Force emoji color rendering */
+		   span:has-content('🚲'), span:has-content('🚴'), span:has-content('📊'),
+		   span:has-content('💻'), span:has-content('📈'), span:has-content('🎯'),
+		   span:has-content('🔍'), span:has-content('💡'), span:has-content('📋'),
+		   span:has-content('✅'), span:has-content('🎨'), span:has-content('🚀'),
+		   span:has-content('🛠️'), span:has-content('📉'), span:has-content('💰'),
+		   span:has-content('👥'), span:has-content('📅'), span:has-content('🌡️'),
+		   span:has-content('⚡'), span:has-content('🔄'), span:has-content('📱'),
+		   span:has-content('🐍'), span:has-content('🗄️') {
+			   font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', 'Android Emoji', 'EmojiSymbols', 'EmojiOne Mozilla', 'Twemoji Mozilla', 'Segoe UI', sans-serif !important;
+			   color: inherit !important;
+		   }
+
+		   .navbar {
+			   background: rgba(15, 23, 42, 0.95);
+			   backdrop-filter: blur(20px);
+			   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+			   color: #fff;
+			   padding: 16px 0;
+			   box-shadow: var(--shadow-lg);
+			   position: sticky;
+			   top: 0;
+			   z-index: 100;
+			   animation: slideDown 0.6s ease;
+		   }
+
+		   @keyframes slideDown {
+			   from {
+				   transform: translateY(-100%);
+				   opacity: 0;
+			   }
+			   to {
+				   transform: translateY(0);
+				   opacity: 1;
+			   }
+		   }
+
+		   .navbar .nav-container {
+			   max-width: 900px;
+			   margin: 0 auto;
+			   display: flex;
+			   align-items: center;
+			   justify-content: space-between;
+			   padding: 0 40px;
+		   }
+
+		   .navbar h1 {
+			   color: #fff;
+			   font-size: 1.6em;
+			   margin: 0;
+			   letter-spacing: 1px;
+			   background: linear-gradient(135deg, var(--accent-cyan), var(--primary-blue));
+			   -webkit-background-clip: text;
+			   -webkit-text-fill-color: transparent;
+			   background-clip: text;
+			   font-weight: 700;
+		   }
+
+		   .navbar nav a {
+			   color: var(--neutral-200);
+			   text-decoration: none;
+			   margin-left: 18px;
+			   font-weight: 500;
+			   transition: var(--transition-normal);
+			   font-size: 1em;
+			   white-space: nowrap;
+			   position: relative;
+		   }
+
+		   .navbar nav a:hover {
+			   color: var(--accent-cyan);
+			   transform: translateY(-1px);
+		   }
+
+		   .navbar nav a::after {
+			   content: '';
+			   position: absolute;
+			   width: 0;
+			   height: 2px;
+			   bottom: -5px;
+			   left: 0;
+			   background: linear-gradient(90deg, var(--accent-cyan), var(--primary-teal));
+			   transition: width 0.3s ease;
+			   border-radius: 1px;
+		   }
+
+		   .navbar nav a:hover::after {
+			   width: 100%;
+		   }
+
+		   .container {
+			   max-width: 900px;
+			   margin: 40px auto;
+			   background: var(--bg-gradient-card);
+			   padding: 32px 40px 40px 40px;
+			   border-radius: 20px;
+			   box-shadow: var(--shadow-xl);
+			   border: 1px solid rgba(255, 255, 255, 0.2);
+			   backdrop-filter: blur(10px);
+		   }
+
+		   h1, h2, h3 {
+			   color: var(--primary-dark);
+			   background: linear-gradient(135deg, var(--primary-blue), var(--primary-teal));
+			   -webkit-background-clip: text;
+			   -webkit-text-fill-color: transparent;
+			   background-clip: text;
+			   text-shadow: none;
+			   font-weight: 700;
+		   }
+
+		   h1 {
+			   border-bottom: none;
+			   padding-bottom: 8px;
+			   font-size: 2.5em;
+			   margin-bottom: 20px;
+		   }
+
+		   h2 {
+			   font-size: 2em;
+			   margin-bottom: 15px;
+			   position: relative;
+		   }
+
+		   h2::after {
+			   content: '';
+			   position: absolute;
+			   bottom: -5px;
+			   left: 0;
+			   width: 50px;
+			   height: 3px;
+			   background: linear-gradient(90deg, var(--accent-cyan), var(--primary-teal));
+			   border-radius: 2px;
+		   }
+
+		   .section {
+			   margin-bottom: 40px;
+			   border-radius: 16px;
+			   box-shadow: var(--shadow-lg);
+			   background: rgba(255, 255, 255, 0.95);
+			   transition: var(--transition-normal);
+			   border: 1px solid rgba(255, 255, 255, 0.2);
+			   position: relative;
+			   overflow: hidden;
+		   }
+
+		   .section::before {
+			   content: '';
+			   position: absolute;
+			   top: 0;
+			   left: 0;
+			   right: 0;
+			   height: 4px;
+			   background: linear-gradient(90deg, var(--primary-blue), var(--accent-cyan), var(--primary-teal));
+			   opacity: 0;
+			   transition: opacity 0.3s ease;
+		   }
+
+		   .section:hover::before {
+			   opacity: 1;
+		   }
+
+		   .section:hover {
+			   transform: translateY(-2px);
+			   box-shadow: var(--shadow-xl);
+		   }
+		   .collapsible { background: #eaf6ff; color: #1a4d8f; cursor: pointer; padding: 18px 24px; width: 100%; border: none; text-align: left; outline: none; font-size: 1.2em; border-radius: 12px 12px 0 0; display: flex; align-items: center; transition: background 0.2s, color 0.2s, box-shadow 0.2s; font-weight: 600; letter-spacing: 0.5px; box-shadow: 0 2px 8px #eaf6ff55; }
+		   .collapsible:hover, .collapsible:focus { background: #d0eaff; color: #e94f37; box-shadow: 0 4px 16px #e94f3733; }
+		   .collapsible .icon { margin-right: 12px; font-size: 1.3em; transition: transform 0.3s, color 0.2s; }
+		   .active .icon { transform: rotate(90deg); color: #e94f37; }
+		   .content { padding: 0 24px 24px 24px; display: none; overflow: hidden; animation: fadeIn 0.7s; border-radius: 0 0 12px 12px; background: #fff; }
+		   .active + .content { display: block; }
+		   .tooltip { border-bottom: 1px dotted #1a4d8f; cursor: help; position: relative; transition: border-color 0.2s; }
+		   .tooltip:hover { border-bottom: 1px solid #e94f37; }
+		   .tooltip .tooltiptext { visibility: hidden; width: 220px; background: #1a4d8f; color: #fff; text-align: left; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s, background 0.2s; font-size: 0.95em; box-shadow: 0 2px 8px #1a4d8f33; }
+		   .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; background: #e94f37; }
+		   table { border-collapse: collapse; width: 100%; margin: 18px 0; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px #1a4d8f11; }
+		   th, td { border: 1px solid #e3e6ea; padding: 8px 12px; text-align: left; transition: background 0.2s, color 0.2s; }
+		   th { background: #f1f4f8; color: #1a4d8f; }
+		   tr:hover td { background: #eaf6ff55; }
+		   .key-findings { background: #eaf6ff; border-left: 4px solid #1a4d8f; padding: 16px; margin: 24px 0; box-shadow: 0 2px 8px #eaf6ff55; }
+		   .footer { text-align: center; color: #888; margin-top: 40px; font-size: 0.95em; background: none; box-shadow: none; }
+		   @media (max-width: 600px) { .container, .navbar .nav-container { padding: 10px; } .collapsible, .content { padding-left: 8px; padding-right: 8px; } }
+		   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+	   </style>
+</head>
+<body>
+<div class="navbar">
+	<div class="nav-container">
+		<div class="nav-title-group">
+			   <h1>Cyclistic Case Study</h1>
+			<div class="nav-underline"></div>
+		</div>
+		<nav class="nav-links">
+			<div class="nav-main-group">
+				<a href="../index.html">Home</a>
+				<a href="cyclistic_web_report.html" class="active">Interactive Report</a>
+				<a href="cyclistic_best_report.html">Summary Report</a>
+			</div>
+			   <!-- nav-sub-group removed as requested -->
+		</nav>
+	</div>
+</div>
+<div class="container">
+	   <div class="section" id="overview">
+		   <button class="collapsible"><span class="icon">&#128202;</span> Project Overview</button>
+		   <div class="content">
+			   <p><b>Objective:</b> Analyze Cyclistic's bike-share trip data to uncover behavioral differences between casual riders and annual members, and recommend strategies to increase membership conversion.</p>
+			   <p><b>Tools:</b> Python, R, Pandas, ggplot2, Seaborn, Matplotlib</p>
+			   <h2>2. Data Sources & Preparation</h2>
+			   <ul>
+				   <li><b>Divvy_Trips_2019_Q1.csv</b>: Q1 2019 trip data (pre-pandemic)</li>
+				   <li><b>Divvy_Trips_2020_Q1.csv</b>: Q1 2020 trip data</li>
+			   </ul>
+			   <p>Data was cleaned, standardized, and merged. Calculated fields include <b>ride_length</b> (duration in minutes) and <b>day_of_week</b> (1=Sunday, 7=Saturday). Outliers and invalid records were removed.</p>
+		   </div>
+	   </div>
+	   <div class="section" id="visuals">
+		   <button class="collapsible"><span class="icon">&#128187;</span> Key Visualizations</button>
+		   <div class="content">
+			   <h3>Ride Counts by Day of Week <span class="tooltip">&#9432;<span class="tooltiptext">Shows the number of rides for each day, split by user type.</span></span></h3>
+			   <div id="rides_by_day_chart" style="height:400px;"></div>
+			   <h3>Ride Length Distribution by User Type <span class="tooltip">&#9432;<span class="tooltiptext">Boxplot: Middle 50% of ride lengths for each user type. Outliers are shown as dots.</span></span></h3>
+			   <div id="ride_length_distribution_chart" style="height:400px;"></div>
+			   <h3>Ride Counts by Year and User Type <span class="tooltip">&#9432;<span class="tooltiptext">Compares ride counts for members and casuals across years.</span></span></h3>
+			   <div id="rides_by_year_chart" style="height:400px;"></div>
+			   <h3>Average Ride Length by Day of Week <span class="tooltip">&#9432;<span class="tooltiptext">Shows how average ride length varies by day and user type.</span></span></h3>
+			   <div id="avg_ride_length_by_day_chart" style="height:400px;"></div>
+		   </div>
+	   </div>
+	   <div class="section" id="stats">
+		   <button class="collapsible"><span class="icon">&#128200;</span> Summary Statistics</button>
+		   <div class="content">
+			   <table>
+				   <tr><th>Year</th><th>User Type</th><th>Count</th><th>Mean (min)</th><th>Std</th><th>Min</th><th>25%</th><th>50%</th><th>75%</th><th>Max</th><th>Mode Day</th></tr>
+				   <tr><td>2019</td><td>casual</td><td>451,834</td><td>19.96</td><td>9.48</td><td>1.02</td><td>12.17</td><td>19.28</td><td>27.20</td><td>40.75</td><td>Sat</td></tr>
+				   <tr><td>2019</td><td>member</td><td>2,058,241</td><td>11.79</td><td>7.90</td><td>1.02</td><td>5.92</td><td>9.55</td><td>15.48</td><td>40.75</td><td>Mon</td></tr>
+				   <tr><td>2020</td><td>casual</td><td>37,357</td><td>16.93</td><td>10.72</td><td>0.02</td><td>8.57</td><td>16.12</td><td>25.17</td><td>40.75</td><td>Sat</td></tr>
+				   <tr><td>2020</td><td>member</td><td>374,045</td><td>10.66</td><td>7.55</td><td>0.02</td><td>5.27</td><td>8.48</td><td>13.77</td><td>40.75</td><td>Mon</td></tr>
+			   </table>
+			   <h2>5. Top Stations (2020, Casual Riders)</h2>
+			   <table>
+				   <tr><th>Rank</th><th>Station Name</th><th>Ride Count</th></tr>
+				   <tr><td>1</td><td>HQ QR</td><td>3,556</td></tr>
+				   <tr><td>2</td><td>Lake Shore Dr & Monroe St</td><td>1,590</td></tr>
+				   <tr><td>3</td><td>Streeter Dr & Grand Ave</td><td>1,530</td></tr>
+				   <tr><td>4</td><td>Shedd Aquarium</td><td>998</td></tr>
+				   <tr><td>5</td><td>Millennium Park</td><td>779</td></tr>
+			   </table>
+		   </div>
+	   </div>
+	   <div class="section" id="findings">
+		   <button class="collapsible"><span class="icon">&#128161;</span> Key Findings</button>
+		   <div class="content key-findings">
+			   <ul>
+				   <li><b>Annual members</b> take shorter, more frequent rides, especially on weekdays, indicating a strong commuting pattern.</li>
+				   <li><b>Casual riders</b> take longer rides, particularly on weekends, suggesting leisure-oriented usage.</li>
+				   <li>The most popular stations for casual riders are near tourist attractions and the lakefront.</li>
+				   <li>There is a clear distinction in usage patterns between members and casual riders, consistent across years.</li>
+			   </ul>
+		   </div>
+	   </div>
+	   <div class="section" id="interactive-charts">
+		   <button class="collapsible"><span class="icon">&#128200;</span> Interactive Data Visualizations</button>
+		   <div class="content">
+			   <p>Explore the data through interactive charts and maps. Click on any visualization to open the full interactive version.</p>
+
+			   <div class="chart-grid">
+				   <div class="chart-item">
+					   <h4>Rides by Day of Week</h4>
+					   <div class="chart-placeholder" onclick="openInteractiveChart('outputs/interactive_rides_by_day.html')">
+						   <i class="fas fa-chart-bar"></i>
+						   <p>Interactive bar chart showing ridership patterns by day</p>
+					   </div>
+				   </div>
+
+				   <div class="chart-item">
+					   <h4>Ride Length Distribution</h4>
+					   <div class="chart-placeholder" onclick="openInteractiveChart('outputs/interactive_ride_length_dist.html')">
+						   <i class="fas fa-chart-pie"></i>
+						   <p>Box plot comparing ride lengths between user types</p>
+					   </div>
+				   </div>
+
+				   <div class="chart-item">
+					   <h4>Hourly Usage Patterns</h4>
+					   <div class="chart-placeholder" onclick="openInteractiveChart('outputs/interactive_hourly_patterns.html')">
+						   <i class="fas fa-clock"></i>
+						   <p>24-hour ridership patterns throughout the day</p>
+					   </div>
+				   </div>
+
+				   <div class="chart-item">
+					   <h4>Popular Routes Map</h4>
+					   <div class="chart-placeholder" onclick="openInteractiveChart('outputs/popular_routes_map.html')">
+						   <i class="fas fa-route"></i>
+						   <p>Interactive map showing top bike routes</p>
+					   </div>
+				   </div>
+
+				   <div class="chart-item">
+					   <h4>Station Usage Heatmap</h4>
+					   <div class="chart-placeholder" onclick="openInteractiveChart('outputs/station_usage_heatmap.html')">
+						   <i class="fas fa-heat"></i>
+						   <p>Heatmap of station popularity and usage</p>
+					   </div>
+				   </div>
+
+				   <div class="chart-item">
+					   <h4>Complete Dashboard</h4>
+					   <div class="chart-placeholder" onclick="openInteractiveChart('report/interactive_dashboard.html')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+						   <i class="fas fa-tachometer-alt"></i>
+						   <p>Full interactive dashboard with all visualizations</p>
+					   </div>
+				   </div>
+			   </div>
+		   </div>
+	   </div>
+
+	   <!-- Code Showcase Section -->
+	   <div class="section">
+		   <button class="collapsible">
+			   <span class="icon">📊</span>
+			   Technical Implementation
+		   </button>
+		   <div class="content">
+			   <h3>Analysis Code Samples</h3>
+			   <p>Explore the technical foundation of our analysis:</p>
+
+			   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0;">
+				   <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #1a4d8f;">
+					   <h4 style="color: #1a4d8f; margin: 0 0 10px 0;">🐍 Python Analysis</h4>
+					   <pre style="background: #2d3748; color: #e2e8f0; padding: 10px; border-radius: 4px; font-size: 0.8em; overflow-x: auto;"><code>import pandas as pd
+from scipy.stats import ttest_ind
+
+# Statistical analysis
+member_duration = df[df['member_casual'] == 'member']['ride_length']
+casual_duration = df[df['member_casual'] == 'casual']['ride_length']
+
+t_stat, p_value = ttest_ind(member_duration, casual_duration)
+print(f"T-test p-value: {p_value:.2e}")</code></pre>
+				   </div>
+
+				   <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #1a4d8f;">
+					   <h4 style="color: #1a4d8f; margin: 0 0 10px 0;">📊 R Statistics</h4>
+					   <pre style="background: #2d3748; color: #e2e8f0; padding: 10px; border-radius: 4px; font-size: 0.8em; overflow-x: auto;"><code>library(tidyverse)
+
+# Data analysis pipeline
+df %>%
+  group_by(member_casual) %>%
+  summarise(
+    avg_duration = mean(ride_length_minutes),
+    total_rides = n(),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(avg_duration))</code></pre>
+				   </div>
+
+				   <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #1a4d8f;">
+					   <h4 style="color: #1a4d8f; margin: 0 0 10px 0;">🗄️ SQL Queries</h4>
+					   <pre style="background: #2d3748; color: #e2e8f0; padding: 10px; border-radius: 4px; font-size: 0.8em; overflow-x: auto;"><code>SELECT
+    member_casual,
+    COUNT(*) as total_rides,
+    ROUND(AVG(ride_length_minutes), 2) as avg_duration
+FROM cyclistic_trips
+GROUP BY member_casual
+ORDER BY total_rides DESC;</code></pre>
+				   </div>
+			   </div>
+
+			   <p style="margin-top: 20px; padding: 15px; background: #eaf6ff; border-radius: 8px; border-left: 4px solid #1a4d8f;">
+				   <strong>Full Codebase:</strong> The complete analysis framework includes 50+ Python/R scripts, comprehensive SQL query libraries, automated reporting systems, and interactive dashboards. All code is available in the project repository for transparency and reproducibility.
+			   </p>
+		   </div>
+	   </div>
+
+	<div class="footer">
+<script>
+// Collapsible section logic
+window.addEventListener('DOMContentLoaded', function() {
+	const collapsibles = document.getElementsByClassName('collapsible');
+	for (let i = 0; i < collapsibles.length; i++) {
+		collapsibles[i].addEventListener('click', function() {
+			this.classList.toggle('active');
+			const content = this.nextElementSibling;
+			if (content.style.display === 'block') {
+				content.style.display = 'none';
+			} else {
+				content.style.display = 'block';
+			}
+		});
+	}
+});
+
+// Function to open interactive charts
+function openInteractiveChart(url) {
+	window.open(url, '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
+}
+</script>
+		<p>Report generated by Cyclistic Case Study &mdash; <span style="color:#1a4d8f">Daniel Abate Garay</span> &mdash; September 2025</p>
+	</div>
+</div>
+<script>
+
+// Modern color palette
+const cyclisticColors = ['#1a4d8f', '#ffb347', '#e94f37', '#6ab187', '#f6abb6', '#4056a1', '#f4d35e'];
+
+// Helper to fetch JSON and plot
+async function loadAndPlot() {
+	// 1. Rides by Day of Week
+	const ridesByDay = await fetch('../data/processed/rides_by_day.json').then(r=>r.json());
+	Plotly.newPlot('rides_by_day_chart', [
+		{ x: ridesByDay.days, y: ridesByDay.member, name: 'Member', type: 'bar', marker: { color: cyclisticColors[0] } },
+		{ x: ridesByDay.days, y: ridesByDay.casual, name: 'Casual', type: 'bar', marker: { color: cyclisticColors[2] } }
+	], {
+		barmode: 'group',
+		title: 'Ride Counts by Day of Week',
+		xaxis: { title: 'Day of Week' },
+		yaxis: { title: 'Number of Rides' },
+		legend: { orientation: 'h', x: 0.5, xanchor: 'center', y: 1.15 },
+		plot_bgcolor: '#f8f9fa', paper_bgcolor: '#fff', font: { family: 'Segoe UI, Arial, sans-serif', size: 15 }
+	});
+
+	// 2. Ride Length Distribution
+	const rideLengthDist = await fetch('../data/processed/ride_length_distribution.json').then(r=>r.json());
+	Plotly.newPlot('ride_length_distribution_chart', [
+		{ y: rideLengthDist.member, name: 'Member', type: 'box', marker: { color: cyclisticColors[0] }, boxpoints: 'outliers', jitter: 0.5, pointpos: -1.8 },
+		{ y: rideLengthDist.casual, name: 'Casual', type: 'box', marker: { color: cyclisticColors[2] }, boxpoints: 'outliers', jitter: 0.5, pointpos: -1.8 }
+	], {
+		title: 'Ride Length Distribution by User Type',
+		yaxis: { title: 'Ride Length (minutes)', range: [0, 200] },
+		xaxis: { title: 'User Type' },
+		boxmode: 'group',
+		plot_bgcolor: '#f8f9fa', paper_bgcolor: '#fff', font: { family: 'Segoe UI, Arial, sans-serif', size: 15 }
+	});
+
+	// 3. Rides by Year and User Type
+	const ridesByYear = await fetch('../data/processed/rides_by_year.json').then(r=>r.json());
+	Plotly.newPlot('rides_by_year_chart', [
+		{ x: ridesByYear.years, y: ridesByYear.member, name: 'Member', type: 'bar', marker: { color: cyclisticColors[0] } },
+		{ x: ridesByYear.years, y: ridesByYear.casual, name: 'Casual', type: 'bar', marker: { color: cyclisticColors[2] } }
+	], {
+		barmode: 'group',
+		title: 'Ride Counts by Year and User Type',
+		xaxis: { title: 'Year' },
+		yaxis: { title: 'Number of Rides' },
+		legend: { orientation: 'h', x: 0.5, xanchor: 'center', y: 1.15 },
+		plot_bgcolor: '#f8f9fa', paper_bgcolor: '#fff', font: { family: 'Segoe UI, Arial, sans-serif', size: 15 }
+	});
+
+	// 4. Average Ride Length by Day of Week
+	const avgRideLength = await fetch('../data/processed/avg_ride_length_by_day.json').then(r=>r.json());
+	Plotly.newPlot('avg_ride_length_by_day_chart', [
+		{ x: avgRideLength.days, y: avgRideLength.casual, name: 'Casual', type: 'scatter', mode: 'lines+markers', line: { color: cyclisticColors[2], width: 4 }, marker: { size: 10 } },
+		{ x: avgRideLength.days, y: avgRideLength.member, name: 'Member', type: 'scatter', mode: 'lines+markers', line: { color: cyclisticColors[0], width: 4 }, marker: { size: 10 } }
+	], {
+		title: 'Average Ride Length by Day of Week',
+		xaxis: { title: 'Day of Week' },
+		yaxis: { title: 'Average Ride Length (minutes)' },
+		plot_bgcolor: '#f8f9fa', paper_bgcolor: '#fff', font: { family: 'Segoe UI, Arial, sans-serif', size: 15 }
+	});
+}
+
+window.addEventListener('DOMContentLoaded', loadAndPlot);
+</script>
+</body>
+</html>
